@@ -49,7 +49,8 @@ $(document).ready(function () {
         data.forEach(function(e, i) {
             // populate the users array with the user objects sent from the server
             // users[i] = {_id: e._id, firstName: e.firstName, lastName: e.lastName, email: e.email};
-            tableHtml += "<tr><td><input type='checkbox'></td>";
+            tableHtml += "<tr><td><input type='checkbox' class='cboxes'></td>";
+            tableHtml += "<td id='_id"+i+"' style='display: none;'>" + e._id + "</td>";
             tableHtml += "<td id='firstName"+i+"'>" + e.firstName + "</td>";
             tableHtml += "<td id='lastName"+i+"'>" + e.lastName + "</td>";
             tableHtml += "<td id='email"+i+"'>" + e.email + "</td></tr>"
@@ -96,7 +97,10 @@ $(document).ready(function () {
     $("#searchbtn").click(function() {
         findUsers();
     });
-
+    //delegated event handler to apply to dynamically created child elements
+    $("#userTable").on("change", "input", function() {
+        $("input").not(this).prop('checked', false);  
+    });
     /*modify quasi code
         -- client side --
         on modify selection
@@ -104,20 +108,45 @@ $(document).ready(function () {
                 return
             else
                 populate an array of objects with the details of the users
+                Show modal with all user fields, update and cancel buttons
                 post json data to the server /modify/user
 
         -- server side --
         merge incoming rows with existing rows*/
     $("#modifybtn").click(function(){
-        // Create array to hold the selected user's email addresses
-        var selectedUsers = [];
-        // loop through the table and add the selected user's emails to the array
+        // loop through the table and add the selected user's profile in a modal
         $("#userRows tr").each(function(i){
             var row = $(this);
             if(row.find("input").prop("checked")){
-                selectedUsers.push(row.find("#email" + i).html());
+                var user = 
+                    {
+                        _id: row.find("#_id" + i).html(),
+                        firstName: row.find("#firstName" + i).html(),
+                        lastName: row.find("#lastName" + i).html(),
+                        email: row.find("#email" + i).html()
+                    };
+                $("#_idMdl").val(user._id);
+                $("#firstNameMdl").val(user.firstName);
+                $("#lastNameMdl").val(user.lastName);
+                $("#emailMdl").val(user.email);
+                $('#myModal').modal('toggle');
+                //prevent the loop from unecessary checks
+                return false;
             }
         });
-        //console.log(selectedUsers);
+    }); // #modifybtn click end
+    $("#modifyUserbtn").click(function(){
+        console.log($("#modifyUserForm").serializeArray());
+        var postData = JSON.stringify($("#modifyUserForm").serializeArray());
+        console.log(postData);
+        $.ajax({
+            method: "post",
+            url: "/mongodb/modifyUser",
+            contentType: "application/json",
+            data: postData,
+            dataType: "json",
+        });
+        $("#myModal").modal("hide"); 
+        findUsers();
     });
 }); // end document ready
