@@ -32,9 +32,20 @@ $(document).ready(function () {
             contentType: "application/json",
             data: postData,
             dataType: "json",
-            success: function (data) {console.log(data);}
+            statusCode: {
+                200: function() {
+                    $("#createModal .modal-body").html("<h2><small>User " + $("#firstName").val() +
+                        " " + $("#lastName").val() + " successfully added!</small></h2>")
+                    $("#createModal").modal("show");
+                }
+            }
         });// end ajax
     });// end submit button event handler
+
+    $("#closeCreateModal").click(function(){
+        $("#createModal").modal("hide");
+        $("#form input").val("");
+    });
 
     /* view user table functions */
 
@@ -101,18 +112,7 @@ $(document).ready(function () {
     $("#userTable").on("change", "input", function() {
         $("input").not(this).prop('checked', false);  
     });
-    /*modify quasi code
-        -- client side --
-        on modify selection
-            if nothing is selected
-                return
-            else
-                populate an array of objects with the details of the users
-                Show modal with all user fields, update and cancel buttons
-                post json data to the server /modify/user
-
-        -- server side --
-        merge incoming rows with existing rows*/
+    //modify the selected user record
     $("#modifybtn").click(function(){
         // loop through the table and add the selected user's profile in a modal
         $("#userRows tr").each(function(i){
@@ -129,7 +129,7 @@ $(document).ready(function () {
                 $("#firstNameMdl").val(user.firstName);
                 $("#lastNameMdl").val(user.lastName);
                 $("#emailMdl").val(user.email);
-                $('#myModal').modal('toggle');
+                $('#modifyModal').modal('toggle');
                 //prevent the loop from unecessary checks
                 return false;
             }
@@ -146,7 +146,43 @@ $(document).ready(function () {
             data: postData,
             dataType: "json",
         });
-        $("#myModal").modal("hide"); 
+        $("#modifyModal").modal("hide"); 
+        findUsers();
+    });
+    $("#deletebtn").click(function(){
+        // loop through the table and add the selected user's profile in a modal
+        $("#userRows tr").each(function(i){
+            var row = $(this);
+            if(row.find("input").prop("checked")){
+                var user = 
+                    {
+                        _id: row.find("#_id" + i).html(),
+                        firstName: row.find("#firstName" + i).html(),
+                        lastName: row.find("#lastName" + i).html(),
+                        email: row.find("#email" + i).html()
+                    };
+                $("#_idDelMdl").val(user._id);
+                $("#firstNameDelMdl").val(user.firstName);
+                $("#lastNameDelMdl").val(user.lastName);
+                $("#emailDelMdl").val(user.email);
+                $('#deleteModal').modal('toggle');
+                //prevent the loop from unecessary checks
+                return false;
+            }
+        });
+    }); // #modifybtn click end
+    $("#deleteUserbtn").click(function(){
+        console.log($("#deleteUserForm").serializeArray());
+        var postData = JSON.stringify($("#deleteUserForm").serializeArray());
+        console.log(postData);
+        $.ajax({
+            method: "post",
+            url: "/mongodb/deleteUser",
+            contentType: "application/json",
+            data: postData,
+            dataType: "json",
+        });
+        $("#deleteModal").modal("hide"); 
         findUsers();
     });
 }); // end document ready

@@ -53,12 +53,21 @@ app.post('/mongodb/modifyUser', function (req, res) {
         lastName: req.body[2].value,
         email: req.body[3].value
     };
-    console.log(updateDoc);
-    db.get().collection('users').findOneAndUpdate({_id: ObjectId(updateDoc._id)}, 
+    db.get().collection('users').findOneAndUpdate( {_id: ObjectId(updateDoc._id)}, 
         {$set: {firstName: updateDoc.firstName, lastName: updateDoc.lastName, 
             email: updateDoc.email}
     });
 }); //app.post /mongodb/modifyUser finished
+
+app.post('/mongodb/deleteUser', function(req, res) {
+    var deleteDoc = {
+        _id: req.body[0].value,
+        firstName: req.body[1].value,
+        lastName: req.body[2].value,
+        email: req.body[3].value
+    }
+    db.get().collection('users').findOneAndDelete( {_id: ObjectId(deleteDoc._id)} );
+});
 
 app.get('/mongodb/viewUser', function (req, res) {
     if(req.query.searchInput){

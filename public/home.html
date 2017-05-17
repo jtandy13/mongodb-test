@@ -10,7 +10,7 @@
     <script src="mongodbTest.js"></script>
 </head>
 <body>
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
+    <div class="modal fade" id="modifyModal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -52,6 +52,60 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Delete user profile</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" id="deleteUserForm">
+                        <div class="form-group">
+                            <label for="_idDelMdl" class="col-sm-3 control-label">_id</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="_idDelMdl" name="_id">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="firstNameDelMdl" class="col-sm-3 control-label">First name</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="firstNameDelMdl" name="firstName">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastNameDelMdl" class="col-sm-3 control-label">Last name</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="lastNameDelMdl" name="lastName">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="emailDelMdl" class="col-sm-3 control-label">Email</label>
+                            <div class="col-sm-9">
+                                <input type="email" class="form-control" id="emailDelMdl" name="email">
+                            </div>
+                        </div>
+                    </form>
+                </div><!-- /.deleteModal-body -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="deleteUserbtn">Delete</button>
+                </div>
+            </div><!-- /.deleteModal-content -->
+        </div><!-- /.deleteModal-dialog -->
+    </div><!-- /.deleteModal -->
+    <div class="modal fade" id="createModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    
+                </div><!-- /.createModal-body -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" id="closeCreateModal">Close</button>
+                </div>
+            </div><!-- /.createModal-content -->
+        </div><!-- /.createModal-dialog -->
+    </div><!-- /.createModal -->
     <div class="container" >
        <div class="row">
            <div class="col-lg-12">
